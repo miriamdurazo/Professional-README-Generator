@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 import * as fs from 'fs';
+import  * as genMarkdown from './generateMarkdown.js';
 
 // array of questions for user
 const questions = [
@@ -14,14 +15,19 @@ const questions = [
         name: 'description',
       },
       {
-        type: 'input',
-        message: 'What do you want to include in the table of contents?',
-        name: 'table_of_contents',
-      },
-      {
           type: 'input',
           message: 'What are the installation instructions?',
           name: 'installation',
+      },
+      {
+        type: 'input',
+        message: 'Who contributed to this project?',
+        name: 'contributors',
+      },
+      {
+        type: 'input',
+        message: 'Which tests did you run?',
+        name: 'tests',
       },
       {
           type: 'input',
@@ -41,21 +47,21 @@ const questions = [
 ];
 
 // function to write README file
-function writeToFile(fileName, data) {
-    inquirer.prompt(questions)
-    .then((data) => {
-    const filename = `${data.name.toLowerCase().split(' ').join('')}.json`;
-    // arguments for hte writeFunction = filename, text to be written error function
-    fs.writeFile(filename, JSON.stringify(data, null, '\t'), (err) =>
+function writeToFile(contents) {
+
+    // arguments for hte writeFunction = 'filename', text to be written error function
+    fs.writeFile('README.md', genMarkdown(contents), (err) =>
       err ? console.log(err) : console.log('Success!')
     );
-  });
-}
+  };
+
 
 // function to initialize program
 function init() {
+    inquirer.prompt(questions)
+    .then((data) => {
+        writeToFile(data);
+    }
+)}
 
-}
-
-// function call to initialize program
 init();
